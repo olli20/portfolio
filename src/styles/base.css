@@ -1,0 +1,51 @@
+/* Dark Theme (Default) */
+:root {
+  --background-color: #121212;
+  --text-color: #e0e0e0;
+  --navbar-bg: #1f1f1f;
+  --navbar-text-color: #e0e0e0;
+  --link-hover-color: #bb86fc;
+}
+
+/* Light Theme */
+[data-theme='light'] {
+  --background-color: #f9f9f9;
+  --text-color: #1e1e1e;
+  --navbar-bg: #ffffff;
+  --navbar-text-color: #1e1e1e;
+  --link-hover-color: #6200ee;
+}
+
+/* Random Palette 1 */
+[data-theme='random1'] {
+  --background-color: #ffeaa7;
+  --text-color: #2d3436;
+  --navbar-bg: #e17055;
+  --navbar-text-color: #ffffff;
+  --link-hover-color: #fd79a8;
+}
+
+/* Random Palette 2 */
+[data-theme='random2'] {
+  --background-color: #74b9ff;
+  --text-color: #2d3436;
+  --navbar-bg: #0984e3;
+  --navbar-text-color: #ffffff;
+  --link-hover-color: #fdcb6e;
+}
+
+/* Random Palette 3 */
+[data-theme='random3'] {
+  --background-color: #fab1a0;
+  --text-color: #2d3436;
+  --navbar-bg: #d63031;
+  --navbar-text-color: #ffffff;
+  --link-hover-color: #ff7675;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  margin: 0;
+  font-family: Arial, sans-serif;
+}

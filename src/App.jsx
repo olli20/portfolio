@@ -1,12 +1,21 @@
-import './App.css'
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import UserRoutes from './UserRoutes';
+import Navbar from './components/Navbar/Navbar';
 
-function App() {
+const App = () => {
+  const theme = useSelector((state) => state.theme.mode);
+
+  useEffect(() => {
+    document.body.setAttribute('data-theme', theme);
+  }, [theme]);
 
   return (
     <>
-      <h1>My Web Portfolio</h1>
+      <Navbar />
+      <UserRoutes />
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;
