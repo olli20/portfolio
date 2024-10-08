@@ -18,14 +18,14 @@ export const blogEntries = [
     title: "Getting Started with Redux in React",
     content: "Redux is a predictable state container for JavaScript apps, often used with React...",
     date: "2024-09-15",
-    tags: ["redux", "state-management", "react"],
+    tags: ["css", "frontend", "design"],
   },
   {
     id: "4",
     title: "How to Deploy Your React App Using Vite",
     content: "Vite is a lightweight and fast development server and build tool for modern web projects...",
     date: "2024-09-10",
-    tags: ["react", "vite", "deployment"],
+    tags: ["css", "frontend", "design"],
   },
   {
     id: "5",
@@ -39,14 +39,14 @@ export const blogEntries = [
     title: "Improving Web Performance with Lazy Loading",
     content: "Lazy loading helps optimize web performance by loading content only when needed...",
     date: "2024-08-15",
-    tags: ["performance", "frontend", "optimization"],
+    tags: ["css", "frontend", "design"],
   },
   {
     id: "7",
     title: "JavaScript Closures Explained",
     content: "Closures are a fundamental concept in JavaScript that allow functions to remember their scope...",
     date: "2024-07-30",
-    tags: ["javascript", "closures", "backend"],
+    tags: ["css", "frontend", "design"],
   },
   {
     id: "8",
