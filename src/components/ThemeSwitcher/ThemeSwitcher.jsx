@@ -4,7 +4,7 @@ import { setTheme } from '../../redux/slices/themeSlice';
 import { AiFillSun, AiFillMoon } from 'react-icons/ai';
 import css from './ThemeSwitcher.module.css'; 
 
-const ThemeSwitcher = () => {
+export const ThemeSwitcher = () => {
   const dispatch = useDispatch();
   const currentTheme = useSelector((state) => state.theme.mode);
 
@@ -33,5 +33,3 @@ const ThemeSwitcher = () => {
     </div>
   );
 };
-
-export default ThemeSwitcher;
