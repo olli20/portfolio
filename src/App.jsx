@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { UserRoutes } from './UserRoutes';
 import { Navbar } from './components/Navbar/Navbar';
-
+  
 export const App = () => {
   const theme = useSelector((state) => state.theme.mode);
 
