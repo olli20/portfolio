@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import UserRoutes from './UserRoutes';
-import Navbar from './components/Navbar/Navbar';
+import { UserRoutes } from './UserRoutes';
+import { Navbar } from './components/Navbar/Navbar';
 
-const App = () => {
+export const App = () => {
   const theme = useSelector((state) => state.theme.mode);
 
   useEffect(() => {
@@ -17,5 +17,3 @@ const App = () => {
     </>
   );
 };
-
-export default App;

@@ -1,9 +1,9 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import ThemeSwitcher from '../ThemeSwitcher/ThemeSwitcher';
+import { ThemeSwitcher } from '../ThemeSwitcher/ThemeSwitcher';
 import css from './Navbar.module.css';
 
-const Navbar = () => {
+export const Navbar = () => {
   return (
     <nav className={css.navbar}>
       <Link to="/" className={css.logo}>Olena Voina</Link>
@@ -19,4 +19,3 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
