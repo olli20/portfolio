@@ -5,6 +5,13 @@
   --navbar-bg: #1f1f1f;
   --navbar-text-color: #e0e0e0;
   --link-hover-color: #bb86fc;
+
+  --button-bg: #333333;
+  --button-text-color: #e0e0e0;
+  --button-hover-bg: #444444;
+  --button-active-bg: #555555;
+  --button-disabled-bg: #2a2a2a;
+  --button-disabled-text-color: #555555;
 }
 
 /* Light Theme */
@@ -14,7 +21,15 @@
   --navbar-bg: #ffffff;
   --navbar-text-color: #1e1e1e;
   --link-hover-color: #6200ee;
+
+  --button-bg: #e0e0e0;
+  --button-text-color: #1e1e1e;
+  --button-hover-bg: #d4d4d4;
+  --button-active-bg: #c8c8c8;
+  --button-disabled-bg: #f0f0f0;
+  --button-disabled-text-color: #b0b0b0;
 }
+
 
 /* Random Palette 1 */
 [data-theme='random1'] {
