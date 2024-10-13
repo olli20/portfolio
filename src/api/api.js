@@ -2,12 +2,15 @@ import axios from 'axios';
 
 const BASE_URL = 'https://olena-blog-backend-1c269ed50e4a.herokuapp.com/api';
 
-export const getAllPosts = async () => {
+export const getAllPosts = async (page = 1, limit = 7, tag = '') => {
   try {
-    const response = await axios.get(`${BASE_URL}/blog`);
-    return response.data.data.posts;
+    const response = await axios.get(`${BASE_URL}/blog`, {
+      params: { page, limit, tag }, 
+    });
+    
+    return response.data;
   } catch (error) {
-    console.error('Error fetching all posts:', error);
+    console.error('Error fetching posts:', error);
     throw error;
   }
 };

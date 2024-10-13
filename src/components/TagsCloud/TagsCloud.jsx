@@ -1,6 +1,6 @@
 import css from './TagsCloud.module.css';
 
-const TagsCloud = ({ tags, visibleTag, onTagClick }) => {
+export const TagsCloud = ({ tags, visibleTag, onTagClick }) => {
   return (
     <ul className={css.tagsCloud}>
       {['all', ...tags].map((tag) => (
@@ -15,5 +15,3 @@ const TagsCloud = ({ tags, visibleTag, onTagClick }) => {
     </ul>
   );
 };
-
-export default TagsCloud;
