@@ -27,23 +27,3 @@ li {
   width: 50%;
 }
 
-.tagsCloud {
-  width: 300px
-}
-
-.tagItem {
-  display: inline-block;
-  margin-right: 10px;
-  margin-bottom: 20px;
-  padding: 5px 15px;
-  border: solid, 1px, var(--navbar-text-color);
-  border-radius: 20px;
-}
-
-.tagItem:hover {
-  cursor: pointer;
-}
-
-.activeTag {
-  font-weight: 600;
-}

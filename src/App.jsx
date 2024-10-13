@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { UserRoutes } from './UserRoutes';
 import { Navbar } from './components/Navbar/Navbar';
