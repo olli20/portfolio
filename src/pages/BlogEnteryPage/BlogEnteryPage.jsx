@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
+
 import { Loader } from '../../components/Loader/Loader'
 import { getPostById } from '../../api/api';
 
@@ -40,13 +42,11 @@ const BlogEnteryPage = () => {
   if (!data) return <p>No post found</p>;
 
   return (
-    <div className={css.container}>
-      <h1>{data.title}</h1>
-      <a onClick={goBack}>Go Back</a>
-      <div>
-        <p>{data.content}</p>
+      <div className={css.container}>
+        <h1>{data.title}</h1>
+        <a onClick={goBack}>Go Back</a>
+          <ReactMarkdown>{data.content}</ReactMarkdown>
       </div>
-    </div>
   );
 };
 
