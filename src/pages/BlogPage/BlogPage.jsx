@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { format } from 'date-fns'; 
 import { Button } from '../../components/Button/Button';
 import { Loader } from '../../components/Loader/Loader';
+import { BlogItem } from './BlogItem'; 
 import { getAllPosts, getTags } from '../../api/api';
 import TagsCloud from '../../components/TagsCloud/TagsCloud';
 import css from './BlogPage.module.css';
@@ -49,16 +51,16 @@ const BlogPage = () => {
     setVisibleEntries(prevVisible => prevVisible + 5);
   };
 
-  const blogItems = currentEntries.map(({ _id, title, date, tags }) => (
-    <li key={_id}>
-      <article>
-        <Link state={{ from: location }} to={`/blog/${_id}`}>
-          <h2>{title}</h2>
-        </Link>
-        <p>{date}</p>
-        <p>{tags.join(', ')}</p>
-      </article>
-    </li>
+  const blogItems = currentEntries.map(({ _id, title, content, date, tags }) => (
+    <BlogItem
+      key={_id}
+      _id={_id}
+      title={title}
+      content={content}
+      date={date}
+      tags={tags}
+      location={location}
+    />
   ));
 
   if (loading) return <div><Loader /></div>;
@@ -71,7 +73,9 @@ const BlogPage = () => {
 
         <TagsCloud tags={tags} visibleTag={visibleTag} onTagClick={handleTagClick} />
         <section className={css.entriesList}>
+
           <ul>{blogItems}</ul>
+          
           {visibleEntries < filteredEntries.length && (
             <Button onClick={showMoreEntries}>Show more</Button>
           )}
