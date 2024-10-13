@@ -1,14 +1,16 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { format } from 'date-fns'; 
 import { Button } from '../../components/Button/Button';
-import { Loader } from '../../components/Loader/Loader'
+import { Loader } from '../../components/Loader/Loader';
+import { BlogItem } from './BlogItem'; 
 import { getAllPosts, getTags } from '../../api/api';
+import TagsCloud from '../../components/TagsCloud/TagsCloud';
 import css from './BlogPage.module.css';
 
 const BlogPage = () => {
   const location = useLocation();
 
-  //state
   const [posts, setPosts] = useState([]);
   const [visibleEntries, setVisibleEntries] = useState(5);
   const [visibleTag, setVisibleTag] = useState('all');
@@ -16,6 +18,7 @@ const BlogPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Fetch posts and tags
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -23,7 +26,7 @@ const BlogPage = () => {
         setPosts(fetchedPosts);
         setTags(fetchedTags);
       } catch (error) {
-        console.log(error);
+        console.error(error);
         setError('Failed to load blog posts or tags');
       } finally {
         setLoading(false);
@@ -34,42 +37,31 @@ const BlogPage = () => {
   }, []);
 
   const filteredEntries = visibleTag === 'all'
-    ? posts : posts.filter(entry => entry.tags.includes(visibleTag));
+    ? posts
+    : posts.filter(entry => entry.tags.includes(visibleTag));
 
   const currentEntries = filteredEntries.slice(0, visibleEntries);
 
-  const handleTagClick = useCallback((tag) => {
+  const handleTagClick = (tag) => {
     setVisibleTag(tag);
     setVisibleEntries(5);
-  }, []);
+  };
 
-  const showMoreEntries = useCallback(() => {
-    setVisibleEntries((prevVisible) => prevVisible + 5);
-  }, []);
+  const showMoreEntries = () => {
+    setVisibleEntries(prevVisible => prevVisible + 5);
+  };
 
-  const renderTagItem = (tagName) => (
-    <li
-      key={tagName}
-      className={`${css.tagItem} ${visibleTag === tagName ? css.activeTag : ''}`}
-      onClick={() => handleTagClick(tagName)}
-    >
-      {tagName}
-    </li>
-  );
-
-  const blogItems = currentEntries.map(({ _id, title, date, tags }) => (
-    <li key={_id}>
-      <article>
-        <Link state={{ from: location }} to={`/blog/${_id}`}>
-          <h2>{title}</h2>
-        </Link>
-        <p>{date}</p>
-        <p>{tags.join(', ')}</p>
-      </article>
-    </li>
+  const blogItems = currentEntries.map(({ _id, title, content, date, tags }) => (
+    <BlogItem
+      key={_id}
+      _id={_id}
+      title={title}
+      content={content}
+      date={date}
+      tags={tags}
+      location={location}
+    />
   ));
-
-  const tagsCloud = ['all', ...tags].map((tag) => renderTagItem(tag));
 
   if (loading) return <div><Loader /></div>;
   if (error) return <p>{error}</p>;
@@ -78,11 +70,12 @@ const BlogPage = () => {
     <main className={css.container}>
       <h1>Blog</h1>
       <div className={css.entries}>
-        <ul className={css.tagsCloud}>
-          {tagsCloud}
-        </ul>
+
+        <TagsCloud tags={tags} visibleTag={visibleTag} onTagClick={handleTagClick} />
         <section className={css.entriesList}>
+
           <ul>{blogItems}</ul>
+          
           {visibleEntries < filteredEntries.length && (
             <Button onClick={showMoreEntries}>Show more</Button>
           )}
