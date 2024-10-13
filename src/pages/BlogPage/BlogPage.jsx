@@ -1,57 +1,67 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { format } from 'date-fns'; 
+import { useLocation } from 'react-router-dom';
 import { Button } from '../../components/Button/Button';
 import { Loader } from '../../components/Loader/Loader';
 import { BlogItem } from './BlogItem'; 
 import { getAllPosts, getTags } from '../../api/api';
-import TagsCloud from '../../components/TagsCloud/TagsCloud';
+import { TagsCloud } from '../../components/TagsCloud/TagsCloud';
 import css from './BlogPage.module.css';
 
 const BlogPage = () => {
   const location = useLocation();
 
   const [posts, setPosts] = useState([]);
-  const [visibleEntries, setVisibleEntries] = useState(5);
+  const [page, setPage] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(true);
   const [visibleTag, setVisibleTag] = useState('all');
   const [tags, setTags] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch posts and tags
+  const limit = 3;
+
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchTags = async () => {
       try {
-        const [fetchedPosts, fetchedTags] = await Promise.all([getAllPosts(), getTags()]);
-        setPosts(fetchedPosts);
+        const fetchedTags = await getTags();
         setTags(fetchedTags);
-      } catch (error) {
-        console.error(error);
-        setError('Failed to load blog posts or tags');
+      } catch (err) {
+        console.error(err);
+        setError('Failed to load tags');
+      }
+    };
+    fetchTags();
+  }, []);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        setLoading(true);
+        const { data, hasNextPage } = await getAllPosts(page, limit, visibleTag === 'all' ? '' : visibleTag);
+
+        setPosts((prevPosts) => [...prevPosts, ...data.posts]);
+        setHasNextPage(hasNextPage); 
+      } catch (err) {
+        console.error(err);
+        setError('Failed to load posts');
       } finally {
         setLoading(false);
       }
     };
-
-    fetchData();
-  }, []);
-
-  const filteredEntries = visibleTag === 'all'
-    ? posts
-    : posts.filter(entry => entry.tags.includes(visibleTag));
-
-  const currentEntries = filteredEntries.slice(0, visibleEntries);
+    fetchPosts();
+  }, [page, visibleTag]);
 
   const handleTagClick = (tag) => {
     setVisibleTag(tag);
-    setVisibleEntries(5);
+    setPage(1);
+    setPosts([]);
   };
 
   const showMoreEntries = () => {
-    setVisibleEntries(prevVisible => prevVisible + 5);
+    setPage((prevPage) => prevPage + 1);
   };
 
-  const blogItems = currentEntries.map(({ _id, title, content, date, tags }) => (
+  const blogItems = posts.map(({ _id, title, content, date, tags }) => (
     <BlogItem
       key={_id}
       _id={_id}
@@ -63,24 +73,25 @@ const BlogPage = () => {
     />
   ));
 
-  if (loading) return <div><Loader /></div>;
   if (error) return <p>{error}</p>;
 
   return (
     <main className={css.container}>
       <h1>Blog</h1>
-      <div className={css.entries}>
+      
+      {loading && <Loader />} 
 
-        <TagsCloud tags={tags} visibleTag={visibleTag} onTagClick={handleTagClick} />
-        <section className={css.entriesList}>
+      {!loading && (
+        <div className={css.entries}>
+          <TagsCloud tags={tags} visibleTag={visibleTag} onTagClick={handleTagClick} />
 
-          <ul>{blogItems}</ul>
-          
-          {visibleEntries < filteredEntries.length && (
-            <Button onClick={showMoreEntries}>Show more</Button>
-          )}
-        </section>
-      </div>
+          <div className={css.entriesList}>
+            <ul>{blogItems}</ul>
+            
+            {hasNextPage && !loading && <Button onClick={showMoreEntries}>Show more</Button>}
+          </div>
+        </div>
+      )}
     </main>
   );
 };
