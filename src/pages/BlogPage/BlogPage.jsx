@@ -52,10 +52,14 @@ const BlogPage = () => {
   }, [page, visibleTag]);
 
   const handleTagClick = (tag) => {
-    setVisibleTag(tag);
-    setPage(1);
-    setPosts([]);
+    if (tag !== visibleTag) {  
+      setVisibleTag(tag);
+      setPage(1);
+      setPosts([]);
+    }
   };
+
+  
 
   const showMoreEntries = () => {
     setPage((prevPage) => prevPage + 1);

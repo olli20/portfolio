@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { Loader } from '../../components/Loader/Loader';
 import { getPostById } from '../../api/api';
@@ -9,8 +9,8 @@ import css from './BlogEnteryPage.module.css';
 const BlogEntryPage = () => {
   const { blogId } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from || "/";
+  // const location = useLocation();
+  // const from = location.state?.from || "/";
 
   // state
   const [data, setData] = useState(null);  
