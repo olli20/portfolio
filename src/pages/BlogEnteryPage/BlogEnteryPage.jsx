@@ -22,6 +22,7 @@ const BlogEntryPage = () => {
     const fetchPost = async () => {
       try {
         const post = await getPostById(blogId);
+        console.log(blogId)
         setData(post);
       } catch (error) {
         console.error(error);
@@ -33,18 +34,6 @@ const BlogEntryPage = () => {
     fetchPost();
   }, [blogId]);
 
-  const goToPreviousPost = () => {
-    if (data?.previousPostId) {
-      navigate(`/blog/${data.previousPostId}`);
-    }
-  };
-
-  const goToNextPost = () => {
-    if (data?.nextPostId) {
-      navigate(`/blog/${data.nextPostId}`);
-    }
-  };
-
   const goBack = useCallback(() => navigate('/blog'), [navigate]);
 
   if (loading) return <div><Loader /></div>;
@@ -54,9 +43,7 @@ const BlogEntryPage = () => {
   return (
     <div className={css.container}>
       <nav className={css.navigationButtons}>
-        {data.previousPostId && <Button onClick={goToPreviousPost}>Previous Post</Button>}
         <Button onClick={goBack}>Back to Blog</Button>
-        {data.nextPostId && <Button onClick={goToNextPost}>Next Post</Button>}
       </nav>
       <main>
         <h1>{data.title}</h1>
