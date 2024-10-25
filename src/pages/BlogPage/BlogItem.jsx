@@ -14,7 +14,7 @@ export const BlogItem = ({ _id, title, content, date, tags, location }) => {
         </Link>
         <p>{teaserContent}</p>
         <p>{formattedDate}</p>
-        <p>Tags: {tags && tags.length > 0 ? tags.map(tag => tag.tagName).join(', ') : 'No tags'}</p>
+        <p>{tags && tags.length > 0 ? tags.map(tag => tag.tagName).join(', ') : 'No tags'}</p>
       </article>
     </li>
   );
