@@ -10,106 +10,121 @@ import css from './BlogPage.module.css';
 const BlogPage = () => {
   const location = useLocation();
 
-  const [posts, setPosts] = useState([]);
-  const [page, setPage] = useState(1);
-  const [hasNextPage, setHasNextPage] = useState(true);
-  const [visibleTag, setVisibleTag] = useState('all');
-  const [tags, setTags] = useState([]);
-  const [tagsLoading, setTagsLoading] = useState(false);
-  const [postsLoading, setPostsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [postsState, setPostsState] = useState({
+    posts: [],
+    page: 1,
+    visibleTag: 'all',
+    loading: false,
+    error: null,
+    hasNextPage: true,
+  });
 
-  const limit = 4;
+  const [tagsState, setTagsState] = useState({
+    tags: [],
+    loading: false,
+    error: null,
+  });
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        setPostsLoading(true);
-  
-        const tagId = visibleTag === 'all' ? null : visibleTag;
-  
-        const response = await getAllPosts(page, limit, tagId);
-    
-        setPosts((prevPosts) => page === 1 ? response.data.posts : [...prevPosts, ...response.data.posts]);
-        setHasNextPage(response.hasNextPage);
-      } catch (err) {
-        console.error('Failed to load posts:', err);
-        setError('Failed to load posts');
-      } finally {
-        setPostsLoading(false);
-      }
-    };
-  
-    if (!tagsLoading) {
-      fetchPosts();
-    }
-  }, [page, visibleTag, tagsLoading]);
-  
+  const limit = 3;
+
   useEffect(() => {
     const fetchTags = async () => {
+      setTagsState((prevState) => ({ ...prevState, loading: true, error: null }));
       try {
-        setTagsLoading(true);
-        const fetchedTags = await getTags();
-  
-        setTags(fetchedTags);
-      } catch (err) {
-        console.error('Failed to load tags:', err);
-        setError('Failed to load tags');
-      } finally {
-        setTagsLoading(false);
+        const tagsResponse = await getTags();
+        setTagsState((prevState) => ({
+          ...prevState,
+          tags: tagsResponse,
+          loading: false,
+        }));
+      } catch (error) {
+        console.error('Failed to load tags:', error);
+        setTagsState((prevState) => ({
+          ...prevState,
+          error: 'Failed to load tags',
+          loading: false,
+        }));
       }
     };
     fetchTags();
   }, []);
 
-const handleTagClick = (tagId) => {
-  if (tagId !== visibleTag) {
-    setVisibleTag(tagId);
-    setPage(1);  
-    setPosts([]);  
-  }
-};
+  useEffect(() => {
+    const fetchPosts = async () => {
+      setPostsState((prevState) => ({ ...prevState, loading: true, error: null }));
+      try {
+        const tagId = postsState.visibleTag === 'all' ? null : postsState.visibleTag;
+        const postsResponse = await getAllPosts(postsState.page, limit, tagId);
 
-  const showMoreEntries = () => {
-    setPage((prevPage) => prevPage + 1);
+        setPostsState((prevState) => ({
+          ...prevState,
+          posts: postsState.page === 1 ? postsResponse.data.posts : [...prevState.posts, ...postsResponse.data.posts],
+          hasNextPage: postsResponse.hasNextPage,
+          loading: false,
+        }));
+      } catch (error) {
+        console.error('Failed to load posts:', error);
+        setPostsState((prevState) => ({
+          ...prevState,
+          error: 'Failed to load posts',
+          loading: false,
+        }));
+      }
+    };
+    fetchPosts();
+  }, [postsState.page, postsState.visibleTag]);
+
+  const handleTagClick = (tagId) => {
+    if (tagId !== postsState.visibleTag) {
+      setPostsState((prevState) => ({
+        ...prevState,
+        visibleTag: tagId,
+        page: 1,
+        posts: [],
+      }));
+    }
   };
 
-  const blogItems = posts.map(({ _id, title, content, date, tags }) => (
-    <BlogItem
-      key={_id}
-      _id={_id}
-      title={title}
-      content={content}
-      date={date}
-      tags={tags}
-      location={location}
-    />
-  ));
+  const showMoreEntries = () => {
+    setPostsState((prevState) => ({ ...prevState, page: prevState.page + 1 }));
+  };
 
-  if (error) return <p>{error}</p>;
+  const { posts, loading: loadingPosts, error: errorPosts, hasNextPage, visibleTag } = postsState;
+  const { tags, loading: loadingTags, error: errorTags } = tagsState;
 
   return (
     <main className={css.container}>
       <h1>Blog</h1>
 
-      {tagsLoading && <Loader />}
-      
-      {!tagsLoading && (
-        <>
-          <TagsCloud tags={tags} visibleTag={visibleTag} onTagClick={handleTagClick} />
+      {loadingTags && <Loader />}
+      {errorTags && <p className={css.error}>{errorTags}</p>}
 
-          <div className={css.entries}>
-            {postsLoading ? <Loader />
-            : (
-              <>
-                <ul>{blogItems}</ul>
-                {hasNextPage && !postsLoading && <Button onClick={showMoreEntries}>Show more</Button>}
-
-              </>
-            )}
-          </div>
-        </>
+      {!loadingTags && !errorTags && (
+        <TagsCloud tags={tags} visibleTag={visibleTag} onTagClick={handleTagClick} />
       )}
+
+      <div className={css.entries}>
+        <ul>
+          {posts.map(({ _id, title, content, date, tags }) => (
+            <BlogItem
+              key={_id}
+              _id={_id}
+              title={title}
+              content={content}
+              date={date}
+              tags={tags}
+              location={location}
+            />
+          ))}
+        </ul>
+
+        {loadingPosts && <Loader />}
+        {!loadingPosts && posts.length >= limit && hasNextPage && (
+          <Button onClick={showMoreEntries}>Show more</Button>
+        )}
+
+        {errorPosts && <p className={css.error}>{errorPosts}</p>}
+      </div>
     </main>
   );
 };

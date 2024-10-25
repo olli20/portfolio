@@ -12,17 +12,14 @@ const BlogEntryPage = () => {
   // const location = useLocation();
   // const from = location.state?.from || "/";
 
-  // state
   const [data, setData] = useState(null);  
   const [loading, setLoading] = useState(true);  
   const [error, setError] = useState(null); 
 
-  // fetching data
   useEffect(() => {
     const fetchPost = async () => {
       try {
         const post = await getPostById(blogId);
-        console.log(blogId)
         setData(post);
       } catch (error) {
         console.error(error);
